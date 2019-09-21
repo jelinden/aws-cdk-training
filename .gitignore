@@ -9,3 +9,4 @@ cdk.out
 app/app.linux
 app/app
 app/app.zip
+cdk.context.json
