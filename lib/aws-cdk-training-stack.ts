@@ -22,7 +22,7 @@ export class AwsCdkTrainingStack extends cdk.Stack {
         {
           cidrMask: 28, // 10.229.0.32 - 10.229.0.47, two zones at eu-north-1
           name: 'private subnet',
-          subnetType: ec2.SubnetType.PRIVATE,
+          subnetType: ec2.SubnetType.PRIVATE_WITH_NAT,
         }
       ],
       gatewayEndpoints: {
@@ -30,7 +30,7 @@ export class AwsCdkTrainingStack extends cdk.Stack {
           service: ec2.GatewayVpcEndpointAwsService.S3
         }
       }, 
-      natGateways: 0, // no need for outside access *from* private subnet
+      // natGateways: 0, // no need for outside access *from* private subnet
       maxAzs: 1,
     });
    
@@ -67,7 +67,7 @@ export class AwsCdkTrainingStack extends cdk.Stack {
       minCapacity: 1,
       desiredCapacity: 1,
       spotPrice: "0.005", // $0.0032 per Hour when writing, $0.0108 per Hour on-demand
-      updateType: autoscaling.UpdateType.REPLACING_UPDATE,
+      updatePolicy: autoscaling.UpdatePolicy.replacingUpdate(),
       healthCheck: autoscaling.HealthCheck.ec2(),
       //keyName: "aws-ssh-key-pair", // ssh key-pair name which was made separately
     });
