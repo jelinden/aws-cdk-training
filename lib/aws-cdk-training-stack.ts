@@ -29,7 +29,9 @@ export class AwsCdkTrainingStack extends cdk.Stack {
         S3: {
           service: ec2.GatewayVpcEndpointAwsService.S3
         }
-      }
+      }, 
+      natGateways: 0, // no need for outside access *from* private subnet
+      maxAzs: 1,
     });
    
     // Copy our zipped app to s3
@@ -64,7 +66,7 @@ export class AwsCdkTrainingStack extends cdk.Stack {
       maxCapacity: 3,
       minCapacity: 1,
       desiredCapacity: 1,
-      spotPrice: "0.009", // $0.0032 per Hour when writing, $0.0108 per Hour on-demand
+      spotPrice: "0.005", // $0.0032 per Hour when writing, $0.0108 per Hour on-demand
       updateType: autoscaling.UpdateType.REPLACING_UPDATE,
       healthCheck: autoscaling.HealthCheck.ec2(),
       //keyName: "aws-ssh-key-pair", // ssh key-pair name which was made separately
@@ -99,7 +101,7 @@ export class AwsCdkTrainingStack extends cdk.Stack {
       targets: [appAutoscalingGroup],
       healthCheck: {
         path: "/health"
-      }
+      },
     });
 
     // Allow ec2 instances to get the zipped app from s3
